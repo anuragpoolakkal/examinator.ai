@@ -87,10 +87,6 @@ export default function Home({
                     }
                 </div>
                 <hr />
-                <div className="flex items-center justify-between my-4">
-                    <p>0 rewrites left</p>
-                    <Link href="/shop"><button className="btn btn-sm"><FiShoppingCart /> SHOP</button></Link>
-                </div>
                 <div tabIndex={0} className='cursor-pointer dropdown dropdown-top flex items-center hover:bg-base-200 p-2 rounded-lg'>
                     <div className='flex items-center justify-between w-full'>
                         <div className='flex items-center'>
@@ -100,19 +96,8 @@ export default function Home({
                                 </div>
                             </div>
                             <p className='font-semibold'>{"AHAHA"}</p>
-                        </div>
-                        <FiMoreHorizontal />
+                        </div>  
                     </div>
-                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 mb-2">
-                        <label htmlFor='settings_modal'><li className='flex'><p><FiSettings />Settings</p></li></label>
-                        <Link href="/shop"><label><li className='flex'><p><FiShoppingCart />Shop</p></li></label></Link>
-                        <Link href="/purchases"><label><li className='flex'><p><FiShoppingBag />My Purchases</p></li></label></Link>
-                        <hr className='my-2' />
-                        <li className='flex' onClick={() => {
-                            localStorage.clear()
-                            window.location.href = "/";
-                        }}><p><FiLogOut className="text-red-600" />Logout</p></li>
-                    </ul>
                 </div>
             </div>
             {/* Main */}
