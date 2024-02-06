@@ -1,8 +1,14 @@
 "use client";
 import Link from "next/link";
+import { useState } from "react";
 import { FiClock, FiEdit, FiExternalLink, FiFileText, FiHash, FiStar, FiType } from "react-icons/fi";
 
 export default function Home() {
+	const [newExamName, setNewExamName] = useState("");
+	const [newExamDuration, setNewExamDuration] = useState(0);
+	const [newExamTotalMarks, setNewExamTotalMarks] = useState(0);
+	const [newExamPrompt, setNewExamPrompt] = useState("");
+
 	return (
 		<main className="flex flex-col p-5 overflow-y-auto w-full">
 			<div className="flex items-center text-xl font-semibold"><FiFileText className="mr-2" /> Compiler Design (CODE)</div>
@@ -62,13 +68,13 @@ export default function Home() {
 				<div className="modal-box">
 					<h3 className="flex items-center font-bold text-lg"><FiFileText className="mr-1" /> New Exam</h3>
 					<p className="flex items-center py-4"><FiType className='mr-2' />Exam Name</p>
-					<input className="input input-bordered w-full" placeholder="Exam Name" type="text" onChange={(x) => { }} />
+					<input className="input input-bordered w-full" placeholder="Exam Name" type="text" value={newExamName} onChange={(x) => { setNewExamName(x.target.value) }} />
 					<p className="flex items-center py-4"><FiClock className='mr-2' />Duration</p>
-					<div className="flex items-center"><input className="input input-bordered" placeholder="Duration" type="number" onChange={(x) => { }} /><p className="ml-5">min</p></div>
+					<div className="flex items-center"><input className="input input-bordered" placeholder="Duration" type="number" value={newExamDuration} onChange={(x) => { setNewExamDuration(parseInt(x.target.value)) }} /><p className="ml-5">min</p></div>
 					<p className="flex items-center py-4"><FiStar className='mr-2' />Total Marks</p>
-					<input className="input input-bordered w-full" placeholder="Total marks" type="number" onChange={(x) => { }} />
+					<input className="input input-bordered w-full" placeholder="Total marks" type="number" value={newExamTotalMarks} onChange={(x) => { setNewExamTotalMarks(parseInt(x.target.value)) }} />
 					<p className="flex items-center py-4"><FiEdit className='mr-2' />Prompt (optional)</p>
-					<textarea className="textarea textarea-bordered w-full" placeholder="Prompt"></textarea>
+					<textarea className="textarea textarea-bordered w-full" placeholder="Prompt" value={newExamPrompt} onChange={(x) => setNewExamPrompt(x.target.value)}></textarea>
 					<div className="modal-action">
 						<label htmlFor="newexam_modal" className="btn">Cancel</label>
 						<label htmlFor="newexam_modal" className="btn btn-primary" onClick={() => { }}>Create Exam</label>

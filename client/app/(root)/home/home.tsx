@@ -1,17 +1,15 @@
 "use client";
-import { useContext, useEffect, useState } from "react";
-import { FiPlus, FiMoreHorizontal, FiSettings, FiUser, FiLogOut, FiFileText, FiEdit, FiTrash, FiArrowRight, FiShoppingCart, FiShoppingBag, FiType, FiPlusCircle, FiKey, FiUsers, FiHash } from "react-icons/fi";
+import { useEffect, useState } from "react";
+import { FiPlus, FiUser, FiFileText, FiEdit, FiTrash, FiType, FiHash } from "react-icons/fi";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { UploadButton, UploadDropzone } from "@/app/utils/uploadthing";
+import { UploadDropzone } from "@/app/utils/uploadthing";
 
 export default function Home({
     children,
 }: {
     children: React.ReactNode
 }) {
-    const pathname = usePathname();
-
     const [showMenu, setShowMenu] = useState(false);
     const [selectedCourse, setSelectedCourse] = useState(-1);
     const [newCourseName, setNewCourseName] = useState("");
