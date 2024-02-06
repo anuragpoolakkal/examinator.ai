@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<ClerkProvider>
-			<html lang="en">
+			<html lang="en" data-theme="light">
 				<head>
 					<title>Examinator.AI</title>
 					{/* <link rel="icon" href="/valuate.png" type="image/png" sizes="any" /> */}
