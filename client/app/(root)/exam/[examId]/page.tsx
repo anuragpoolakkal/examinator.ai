@@ -1,4 +1,5 @@
 "use client";
+import { UploadDropzone } from "@/app/utils/uploadthing";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import { FiCheckCircle, FiClock, FiDownload, FiEdit, FiExternalLink, FiFileText, FiHash, FiKey, FiSettings, FiStar, FiType } from "react-icons/fi";
@@ -17,7 +18,6 @@ export default function Home() {
 						<div role="tablist" className="tabs tabs-boxed">
 							<a onClick={() => setSelectedTab(0)} role="tab" className={"tab " + (selectedTab === 0 ? "tab-active" : "")}><FiFileText className="mr-2" /> Question Paper</a>
 							<a onClick={() => setSelectedTab(1)} role="tab" className={"tab " + (selectedTab === 1 ? "tab-active" : "")}><FiKey className="mr-2" /> Answer Key</a>
-							<a onClick={() => setSelectedTab(2)} role="tab" className={"tab " + (selectedTab === 2 ? "tab-active" : "")}><FiSettings className="mr-2" /> Evaluate</a>
 						</div>
 						<button className="btn btn-primary"><FiDownload /> Download</button>
 					</div>
@@ -30,6 +30,20 @@ export default function Home() {
 					<div className="flex justify-between"><button className="btn btn-primary"><FiCheckCircle /> Review Answer Sheets</button>
 						<button className="btn btn-primary"><FiFileText /> View Mark Sheet</button>
 					</div>
+					<div className="flex items-center text-xl font-semibold my-5"><FiFileText className="mr-2" /> Evaluate Answer Sheets</div>
+					<UploadDropzone
+						endpoint="media"
+						onClientUploadComplete={(res) => {
+							var files = [];
+							for (const file of res) {
+								files.push(file.url);
+							}
+							// setNewEvaluatorQuestionPapers([...files]);
+						}}
+						onUploadError={(error: Error) => {
+							alert(`ERROR! ${error.message}`);
+						}}
+					/>
 				</div>
 			</div>
 		</main>
