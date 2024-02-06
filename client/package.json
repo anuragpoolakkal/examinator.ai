@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^4.29.6",
+    "@react-pdf/renderer": "^3.3.7",
     "@uploadthing/react": "^6.2.2",
     "axios": "^1.6.7",
     "framer-motion": "^11.0.3",
