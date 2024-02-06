@@ -14,32 +14,12 @@ export default function Home({
 
     const [showMenu, setShowMenu] = useState(false);
     const [selectedCourse, setSelectedCourse] = useState(-1);
-    const [newEvaluatorTitle, setNewEvaluatorTitle] = useState("");
-    const [newEvaluatorClassId, setNewEvaluatorClassId] = useState("");
-    const [newEvaluatorQuestionPapers, setNewEvaluatorQuestionPapers] = useState([]);
-    const [newEvaluatorAnswerKeys, setNewEvaluatorAnswerKeys] = useState([]);
-    const [editClassName, setEditClassName] = useState("");
-    const [editClassSection, setEditClassSection] = useState("");
-    const [editClassSubject, setEditClassSubject] = useState("");
-    const [evaluators, setEvaluators] = useState([]);
-    const [classes, setClasses] = useState([]);
-    const [user, setUser] = useState({});
-    const [moreMenuOpen, setMoreMenuOpen] = useState(false);
-    const [newDocumentModalRef, setNewDocumentModalRef] = useState(null);
-    const [deleteEvaluatorModalRef, setDeleteEvaluatorModalRef] = useState(null);
-    const [newClassModalRef, setNewClassModalRef] = useState(null);
-    const [editClassModalRef, setEditClassModalRef] = useState(null);
-    const [deleteClassModalRef, setDeleteClassModalRef] = useState(null);
-    const [newEvaluatorModalRef, setNewEvaluatorModalRef] = useState(null);
-    const [editEvaluatorModalRef, setEditEvaluatorModalRef] = useState(null);
-    const [settingsModalRef, setSettingsModalRef] = useState(null);
-    const [newEvaluatorModal, setNewEvaluatorModal] = useState(null);
-    const [editEvaluatorModal, setEditEvaluatorModal] = useState(null);
-    const [newClassModal, setNewClassModal] = useState(null);
-    const [editClassModal, setEditClassModal] = useState(null);
-    const [deleteClassModal, setDeleteClassModal] = useState(null);
-    const [deleteEvaluatorModal, setDeleteEvaluatorModal] = useState(null);
-
+    const [newCourseName, setNewCourseName] = useState("");
+    const [newCourseCode, setNewCourseCode] = useState("");
+    const [newCourseSyllabus, setNewCourseSyllabus] = useState("");
+    const [newCourseOutcomes, setNewCourseOutcomes] = useState("");
+    const [newCourseTextbook, setNewCourseTextbook] = useState("");
+    const [newCourseQuestionPapers, setNewCourseQuestionPapers] = useState("");
 
     useEffect(() => {
 
@@ -96,7 +76,7 @@ export default function Home({
                                 </div>
                             </div>
                             <p className='font-semibold'>{"AHAHA"}</p>
-                        </div>  
+                        </div>
                     </div>
                 </div>
             </div>
@@ -108,15 +88,13 @@ export default function Home({
                 <div className="modal-box">
                     <h3 className="flex items-center font-bold text-lg"><FiFileText className="mr-1" /> New Course</h3>
                     <p className="flex items-center py-4"><FiType className='mr-2' />Course Name</p>
-                    <input className="input input-bordered w-full" placeholder="Course Name" type="text" onChange={(x) => setNewEvaluatorTitle(x.target.value)} value={newEvaluatorTitle} />
+                    <input className="input input-bordered w-full" placeholder="Course Name" type="text" onChange={(x) => setNewCourseName(x.target.value)} value={newCourseName} />
                     <p className="flex items-center py-4"><FiHash className='mr-2' />Course Code</p>
-                    <input className="input input-bordered w-full" placeholder="Course Code" type="text" onChange={(x) => setNewEvaluatorTitle(x.target.value)} value={newEvaluatorTitle} />
+                    <input className="input input-bordered w-full" placeholder="Course Code" type="text" onChange={(x) => setNewCourseCode(x.target.value)} value={newCourseCode} />
                     <p className="flex items-center py-4"><FiFileText className='mr-2' />Course Syllabus</p>
-                    {newEvaluatorQuestionPapers.length > 0 ?
+                    {newCourseSyllabus ?
                         <div className="flex flex-wrap">{
-                            newEvaluatorQuestionPapers.map((file: string, i: number) => {
-                                return <img key={i} src={file} className="border cursor-pointer w-20 h-20 object-cover rounded-md mr-2 mb-2" onClick={() => window.open(file)} />
-                            })
+                            <img src={newCourseSyllabus} className="border cursor-pointer w-20 h-20 object-cover rounded-md mr-2 mb-2" onClick={() => window.open(newCourseSyllabus)} />
                         }</div>
                         : <UploadDropzone
                             endpoint="media"
@@ -125,18 +103,17 @@ export default function Home({
                                 for (const file of res) {
                                     files.push(file.url);
                                 }
-                                // setNewEvaluatorQuestionPapers([...files]);
+
+                                setNewCourseSyllabus(files[0]);
                             }}
                             onUploadError={(error: Error) => {
                                 alert(`ERROR! ${error.message}`);
                             }}
                         />}
                     <p className="flex items-center py-4"><FiFileText className='mr-2' />Course Outcomes</p>
-                    {newEvaluatorQuestionPapers.length > 0 ?
+                    {newCourseOutcomes ?
                         <div className="flex flex-wrap">{
-                            newEvaluatorQuestionPapers.map((file: string, i: number) => {
-                                return <img key={i} src={file} className="border cursor-pointer w-20 h-20 object-cover rounded-md mr-2 mb-2" onClick={() => window.open(file)} />
-                            })
+                            <img src={newCourseOutcomes} className="border cursor-pointer w-20 h-20 object-cover rounded-md mr-2 mb-2" onClick={() => window.open(newCourseOutcomes)} />
                         }</div>
                         : <UploadDropzone
                             endpoint="media"
@@ -145,18 +122,17 @@ export default function Home({
                                 for (const file of res) {
                                     files.push(file.url);
                                 }
-                                // setNewEvaluatorQuestionPapers([...files]);
+
+                                setNewCourseOutcomes(files[0]);
                             }}
                             onUploadError={(error: Error) => {
                                 alert(`ERROR! ${error.message}`);
                             }}
                         />}
                     <p className="flex items-center py-4"><FiFileText className='mr-2' />Textbook</p>
-                    {newEvaluatorQuestionPapers.length > 0 ?
+                    {newCourseTextbook ?
                         <div className="flex flex-wrap">{
-                            newEvaluatorQuestionPapers.map((file: string, i: number) => {
-                                return <img key={i} src={file} className="border cursor-pointer w-20 h-20 object-cover rounded-md mr-2 mb-2" onClick={() => window.open(file)} />
-                            })
+                            <img src={newCourseTextbook} className="border cursor-pointer w-20 h-20 object-cover rounded-md mr-2 mb-2" onClick={() => window.open(newCourseTextbook)} />
                         }</div>
                         : <UploadDropzone
                             endpoint="media"
@@ -165,18 +141,17 @@ export default function Home({
                                 for (const file of res) {
                                     files.push(file.url);
                                 }
-                                // setNewEvaluatorQuestionPapers([...files]);
+
+                                setNewCourseTextbook(files[0]);
                             }}
                             onUploadError={(error: Error) => {
                                 alert(`ERROR! ${error.message}`);
                             }}
                         />}
                     <p className="flex items-center py-4"><FiFileText className='mr-2' />Previous Question Papers (optional)</p>
-                    {newEvaluatorQuestionPapers.length > 0 ?
+                    {newCourseQuestionPapers ?
                         <div className="flex flex-wrap">{
-                            newEvaluatorQuestionPapers.map((file: string, i: number) => {
-                                return <img key={i} src={file} className="border cursor-pointer w-20 h-20 object-cover rounded-md mr-2 mb-2" onClick={() => window.open(file)} />
-                            })
+                            <img src={newCourseQuestionPapers} className="border cursor-pointer w-20 h-20 object-cover rounded-md mr-2 mb-2" onClick={() => window.open(newCourseQuestionPapers)} />
                         }</div>
                         :
                         <UploadDropzone
@@ -186,7 +161,8 @@ export default function Home({
                                 for (const file of res) {
                                     files.push(file.url);
                                 }
-                                // setNewEvaluatorQuestionPapers([...files]);
+
+                                setNewCourseQuestionPapers(files[0]);
                             }}
                             onUploadError={(error: Error) => {
                                 alert(`ERROR! ${error.message}`);

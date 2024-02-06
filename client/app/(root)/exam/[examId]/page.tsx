@@ -1,5 +1,6 @@
 "use client";
 import { UploadDropzone } from "@/app/utils/uploadthing";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import { FiArrowLeft, FiCheckCircle, FiClock, FiDownload, FiEdit, FiExternalLink, FiFileText, FiHash, FiKey, FiSettings, FiStar, FiType } from "react-icons/fi";
@@ -27,7 +28,7 @@ export default function Home() {
 				</div>
 				<div className="divider divider-horizontal"></div>
 				<div className="w-full flex flex-col">
-					<div className="flex justify-between"><button className="btn btn-primary"><FiCheckCircle /> Review Answer Sheets</button>
+					<div className="flex justify-between"><Link href={"/review/123456"}><button className="btn btn-primary"><FiCheckCircle /> Review Answer Sheets</button></Link>
 						<button className="btn btn-primary"><FiFileText /> View Mark Sheet</button>
 					</div>
 					<div className="flex items-center text-xl font-semibold my-5"><FiFileText className="mr-2" /> Evaluate Answer Sheets</div>
