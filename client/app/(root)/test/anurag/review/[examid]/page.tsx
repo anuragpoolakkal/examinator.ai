@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import { serverUrl } from "@/utils/utils";
+import { serverUrl } from "@/app/utils/utils";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import {
@@ -17,7 +16,7 @@ import {
 	FiUser,
 } from "react-icons/fi";
 import { AiOutlineTrophy } from "react-icons/ai";
-import Navbar from "../../components/Navbar";
+import Navbar from "@/app/components/Navbar";
 
 type Params = {
 	params: {

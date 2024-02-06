@@ -91,7 +91,7 @@ export default function Home() {
 							</div>
 						</div> */}
 						<div
-							onClick={() => (document.getElementById("new_valuation_modal") as any)?.showModal()}
+							onClick={() => (document.getElementById("new_course_modal") as any)?.showModal()}
 							className="hover:shadow-2xl duration-100 cursor-pointer border-2 flex flex-col min-h-[400px] min-w-[350px] mb-10 mr-10 rounded-3xl shadow-lg overflow-hidden"
 						>
 							<div className="flex flex-col items-center justify-center w-full h-full">
@@ -125,7 +125,7 @@ export default function Home() {
 										</div>
 										<div className="p-5 h-auto">
 											<p className="font-semibold text-lg">{item?.title}</p>
-											<p className="text-gray-500">{item?.valuations} valuations</p>
+											<p className="text-gray-500">{item?.valuations} courses</p>
 										</div>
 									</div>
 								</Section>
@@ -281,7 +281,7 @@ export default function Home() {
 						value={title}
 						onChange={(e) => setTitle(e.target.value)}
 					/>
-					<p className="mb-5 font-semibold">Prompt/p>
+					<p className="mb-5 font-semibold">Prompt</p>
 					<input
 						type="text"
 						placeholder="Prompt"
@@ -311,7 +311,6 @@ export default function Home() {
 							)}
 						</div>
 					</div> */}
-					
 					<button
 						className={
 							"mt-10 btn w-full btn-primary " +
