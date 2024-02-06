@@ -3,7 +3,6 @@ import express from 'express';
 import Course from '../models/Course.js';
 const router = express.Router();
 
-
 // Create a new course
 router.post('/', async (req, res) => {
     try {
@@ -70,3 +69,5 @@ router.delete('/:id', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+export default router;

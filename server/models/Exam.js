@@ -27,4 +27,4 @@ const ExamSchema = new mongoose.Schema(
 
 const Exam = mongoose.model("Exam", ExamSchema);
 
-export default Course;
+export default Exam;
