@@ -96,7 +96,7 @@ export default function Home() {
 						>
 							<div className="flex flex-col items-center justify-center w-full h-full">
 								<CiCirclePlus className="h-40 w-40 mb-2" />
-								<p className="font-semibold text-xl">New Valuator</p>
+								<p className="font-semibold text-xl">New Course</p>
 							</div>
 						</div>
 						{valuators?.map((item: any, index: number) => {
@@ -146,22 +146,23 @@ export default function Home() {
 				</div>
 			</main>
 			{/* Modals */}
-			{/* New valuation modal */}
-			<dialog id="new_valuation_modal" className="modal">
+			{/* New course modal */}
+			<dialog id="new_course_modal" className="modal">
 				<div className="modal-box max-w-2xl align-middle">
 					<h3 className="flex items-center font-bold text-2xl mb-5">
-						<FiPlusCircle className="mr-2" /> Create new valuator
+						<FiPlusCircle className="mr-2" />
+						New Course
 					</h3>
-					<p className="mb-5 font-semibold">Exam title</p>
+					<p className="mb-5 font-semibold">Name of the course</p>
 					<input
 						type="text"
-						placeholder="Exam Title"
+						placeholder="Course name"
 						className="input input-bordered w-full"
 						value={title}
 						onChange={(e) => setTitle(e.target.value)}
 					/>
 					<div className="w-full flex flex-col">
-						<p className="mb-2 mt-7 font-semibold">Upload question paper</p>
+						<p className="mb-2 mt-7 font-semibold">Upload syllabus</p>
 						<div className="flex">
 							{questionPaperUrl ? <AiFillCheckCircle className="text-2xl mr-2 text-green-500" /> : ""}
 							{questionPaperUrl ? (
@@ -169,7 +170,7 @@ export default function Home() {
 							) : (
 								<UploadButton
 									endpoint="media"
-									onClientUploadComplete={(res) => {
+									onClientUploadComplete={(res: any) => {
 										// Do something with the response
 										console.log("Files: ", res![0].url);
 										setQuestionPaperUrl(res![0].url);
@@ -183,7 +184,7 @@ export default function Home() {
 						</div>
 					</div>
 					<div className="w-full flex flex-col">
-						<p className="mb-2 mt-7 font-semibold">Upload answer key / criteria</p>
+						<p className="mb-2 mt-7 font-semibold">Upload PYQ</p>
 						<div className="flex">
 							{answerKeyUrl ? <AiFillCheckCircle className="text-2xl mr-2 text-green-500" /> : ""}
 							{answerKeyUrl ? (
@@ -191,10 +192,32 @@ export default function Home() {
 							) : (
 								<UploadButton
 									endpoint="media"
-									onClientUploadComplete={(res) => {
+									onClientUploadComplete={(res: any) => {
 										// Do something with the response
 										console.log("Files: ", res![0].url);
 										setAnswerKeyUrl(res![0].url);
+									}}
+									onUploadError={(error: Error) => {
+										// Do something with the error.
+										alert(`ERROR! ${error.message}`);
+									}}
+								/>
+							)}
+						</div>
+					</div>
+					<div className="w-full flex flex-col">
+						<p className="mb-2 mt-7 font-semibold">Upload course outcomes</p>
+						<div className="flex">
+							{questionPaperUrl ? <AiFillCheckCircle className="text-2xl mr-2 text-green-500" /> : ""}
+							{questionPaperUrl ? (
+								questionPaperUrl
+							) : (
+								<UploadButton
+									endpoint="media"
+									onClientUploadComplete={(res: any) => {
+										// Do something with the response
+										console.log("Files: ", res![0].url);
+										setQuestionPaperUrl(res![0].url);
 									}}
 									onUploadError={(error: Error) => {
 										// Do something with the error.
@@ -217,7 +240,7 @@ export default function Home() {
 						{creatingValuator ? (
 							<span className="loading loading-spinner loading-sm"></span>
 						) : (
-							"Create Valuator"
+							"Create new course"
 						)}
 					</button>
 				</div>
@@ -225,7 +248,92 @@ export default function Home() {
 					<button>close</button>
 				</form>
 			</dialog>
-			{/* New valuation modal end */}
+			{/* New course modal end */}
+
+			{/* New exam modal */}
+			<dialog id="new_exam_modal" className="modal">
+				<div className="modal-box max-w-2xl align-middle">
+					<h3 className="flex items-center font-bold text-2xl mb-5">
+						<FiPlusCircle className="mr-2" />
+						New Exam
+					</h3>
+					<p className="mb-5 font-semibold">Name of the exam</p>
+					<input
+						type="text"
+						placeholder="Exam Title"
+						className="input input-bordered w-full"
+						value={title}
+						onChange={(e) => setTitle(e.target.value)}
+					/>
+					<p className="mb-5 font-semibold">Total marks</p>
+					<input
+						type="text"
+						placeholder="Total marks"
+						className="input input-bordered w-full"
+						value={title}
+						onChange={(e) => setTitle(e.target.value)}
+					/>
+					<p className="mb-5 font-semibold">Exam duration</p>o
+					<input
+						type="text"
+						placeholder="Exam Duration"
+						className="input input-bordered w-full"
+						value={title}
+						onChange={(e) => setTitle(e.target.value)}
+					/>
+					<p className="mb-5 font-semibold">Prompt/p>
+					<input
+						type="text"
+						placeholder="Prompt"
+						className="input input-bordered w-full"
+						value={title}
+						onChange={(e) => setTitle(e.target.value)}
+					/>
+					{/* <div className="w-full flex flex-col">
+						<p className="mb-2 mt-7 font-semibold">Upload question paper</p>
+						<div className="flex">
+							{questionPaperUrl ? <AiFillCheckCircle className="text-2xl mr-2 text-green-500" /> : ""}
+							{questionPaperUrl ? (
+								questionPaperUrl
+							) : (
+								<UploadButton
+									endpoint="media"
+									onClientUploadComplete={(res: any) => {
+										// Do something with the response
+										console.log("Files: ", res![0].url);
+										setQuestionPaperUrl(res![0].url);
+									}}
+									onUploadError={(error: Error) => {
+										// Do something with the error.
+										alert(`ERROR! ${error.message}`);
+									}}
+								/>
+							)}
+						</div>
+					</div> */}
+					
+					<button
+						className={
+							"mt-10 btn w-full btn-primary " +
+							(!title || !questionPaperUrl || !answerKeyUrl ? "opacity-50" : "")
+						}
+						onClick={() => {
+							if (!title || !questionPaperUrl || !answerKeyUrl) return;
+							createValuator();
+						}}
+					>
+						{creatingValuator ? (
+							<span className="loading loading-spinner loading-sm"></span>
+						) : (
+							"Create new exam"
+						)}
+					</button>
+				</div>
+				<form method="dialog" className="modal-backdrop">
+					<button>close</button>
+				</form>
+			</dialog>
+			{/* New exam modal end */}
 			<ToastContainer />
 		</div>
 	);
