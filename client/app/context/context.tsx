@@ -123,7 +123,7 @@ function Context({ children }: { children: React.ReactNode }) {
         });
     }
 
-    const getExam = (examId:string) => {
+    const getExam = (examId: string) => {
         const config = {
             method: "GET",
             url: `${serverURL}/exams/${examId}`,
@@ -136,6 +136,32 @@ function Context({ children }: { children: React.ReactNode }) {
         axios(config).then((response) => {
             setExamData(response.data);
         }).catch((error) => {
+            toast.error("Something went wrong!");
+        });
+    }
+
+    const [evaluating, setEvaluating] = useState(false);
+
+    const evaluate = (examId: string, answerSheet: any) => {
+        setEvaluating(true);
+        const config = {
+            method: "POST",
+            url: `${serverURL}/valuators/valuate`,
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": `application/json`,
+            },
+            data: {
+                examId: examId,
+                answerSheet: answerSheet
+            }
+        };
+
+        axios(config).then((response) => {
+            setEvaluating(false);
+            toast.success("Answer sheet evaluated successfully!");
+        }).catch((error) => {
+            setEvaluating(false);
             toast.error("Something went wrong!");
         });
     }
@@ -175,7 +201,9 @@ function Context({ children }: { children: React.ReactNode }) {
             setNewExamPrompt,
             createExam,
             getExam,
-            examData
+            examData,
+            evaluate,
+            evaluating
         }}>
             {children}
         </MainContext.Provider>
