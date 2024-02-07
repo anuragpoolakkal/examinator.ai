@@ -4,7 +4,7 @@ import { UploadDropzone } from "@/app/utils/uploadthing";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
-import { FiArrowLeft, FiCheckCircle, FiClock, FiDownload, FiEdit, FiExternalLink, FiFileText, FiHash, FiKey, FiSettings, FiStar, FiType } from "react-icons/fi";
+import { FiArrowLeft, FiCheckCircle, FiClock, FiDownload, FiEdit, FiExternalLink, FiFileText, FiHash, FiKey, FiPrinter, FiSettings, FiStar, FiType } from "react-icons/fi";
 
 export default function Home() {
 	const { examId } = useParams();
@@ -19,20 +19,20 @@ export default function Home() {
 
 	return (
 		<main className="w-screen h-screen bg-base-100 flex flex-col p-5 overflow-auto box-border">
-			<div className="flex items-center text-xl font-semibold"><button className="btn btn-square mr-2" onClick={() => window.history.back()}><FiArrowLeft /></button><FiFileText className="mr-2" /> {examData?.name} | {examData?.course?.name} ({examData?.course?.code})</div>
+			<div className="print flex items-center text-xl font-semibold"><button className="btn btn-square mr-2" onClick={() => window.history.back()}><FiArrowLeft /></button><FiFileText className="mr-2" /> {examData?.name} | {examData?.course?.name} ({examData?.course?.code})</div>
 			<div className="flex w-full h-full mt-5">
 				<div className="w-full flex flex-col">
-					<div className="flex justify-between items-center">
+					<div className="print flex justify-between items-center">
 						<div role="tablist" className="tabs tabs-boxed">
 							<a onClick={() => setSelectedTab(0)} role="tab" className={"tab " + (selectedTab === 0 ? "tab-active" : "")}><FiFileText className="mr-2" /> Question Paper</a>
 							<a onClick={() => setSelectedTab(1)} role="tab" className={"tab " + (selectedTab === 1 ? "tab-active" : "")}><FiKey className="mr-2" /> Answer Key</a>
 						</div>
-						<button className="btn btn-primary"><FiDownload /> Download</button>
+						<button className="btn btn-primary" onClick={()=>window.print()}><FiPrinter /> Download / Print</button>
 					</div>
 					<div className="overflow-y-auto">
 						{
 							selectedTab === 0 ? <div className="flex flex-col">
-								<div className="flex flex-col items-center w-full mt-10">
+								<div className="flex flex-col items-center w-full mt-10"	>
 									<p className="text-2xl mb-2">{examData?.name}</p>
 									<p className="text-xl font-semibold">Course Code: {examData?.course?.code}</p>
 									<p className="text-xl font-semibold">Course Name: {examData?.course?.name}</p>
@@ -75,8 +75,8 @@ export default function Home() {
 						}
 					</div>
 				</div>
-				<div className="divider divider-horizontal"></div>
-				<div className="w-full flex flex-col">
+				<div className="print divider divider-horizontal"></div>
+				<div className="print w-full flex flex-col">
 					<div className="flex justify-between"><Link href={"/review/123456"}><button className="btn btn-primary"><FiCheckCircle /> Review Answer Sheets</button></Link>
 						<button className="btn btn-primary"><FiFileText /> View Mark Sheet</button>
 					</div>
