@@ -18,7 +18,8 @@ export default function Home() {
 		setNewExamTotalMarks,
 		newExamPrompt,
 		setNewExamPrompt,
-		createExam
+		createExam,
+		creatingExam
 	} = useContext(MainContext);
 
 	return (
@@ -91,7 +92,10 @@ export default function Home() {
 					<textarea className="textarea textarea-bordered w-full" placeholder="Prompt" value={newExamPrompt} onChange={(x) => setNewExamPrompt(x.target.value)}></textarea>
 					<div className="modal-action">
 						<label htmlFor="newexam_modal" className="btn">Cancel</label>
-						<label htmlFor="newexam_modal" className="btn btn-primary" onClick={() => createExam()}>Create Exam</label>
+						<label htmlFor={creatingExam ? "" : "newexam_modal"} className="btn btn-primary" onClick={() => {
+							if (creatingExam) return;
+							createExam();
+						}}>{creatingExam ? <div className="flex items-center"><span className="loading loading-spinner loading-sm mr-2"></span><p>Creating Exam...</p></div> : "Create Exam"}</label>
 					</div>
 				</div>
 				<label className="modal-backdrop" htmlFor="newexam_modal">Cancel</label>

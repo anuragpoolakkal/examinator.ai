@@ -28,12 +28,15 @@ export default function Home({
         newCourseQuestionPapers,
         setNewCourseQuestionPapers,
         createCourse,
+        getExams
     } = useContext(MainContext);
 
     const [showMenu, setShowMenu] = useState(false);
 
     useEffect(() => {
         getCourses();
+        setSelectedCourse(0);
+        getExams();
     }, []);
 
     return (
@@ -61,7 +64,7 @@ export default function Home({
                                     <FiFileText />
                                 </div>
                                 <div className='flex flex-col items-start'>
-                                    <p className='text-sm text-ellipsis line-clamp-1 font-semibold'>Sample Course</p>
+                                    <p className='text-sm text-ellipsis line-clamp-1 font-semibold'>{course?.name}</p>
                                 </div>
                             </div>
                             {selectedCourse === i ?

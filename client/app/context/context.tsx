@@ -36,7 +36,8 @@ function Context({ children }: { children: React.ReactNode }) {
         };
 
         axios(config).then((response) => {
-            setCourses(response.data);
+            setCourses(response.data.reverse());
+            getExamsByCourseId(response.data[0]?._id);
         }).catch((error) => {
             toast.error("Something went wrong!");
         });
@@ -94,7 +95,30 @@ function Context({ children }: { children: React.ReactNode }) {
         });
     }
 
+    const getExamsByCourseId = (courseId: string) => {
+        const config = {
+            method: "POST",
+            url: `${serverURL}/exams/byCourseId`,
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": `application/json`,
+            },
+            data: {
+                courseId: courseId
+            }
+        };
+
+        axios(config).then((response) => {
+            setExams(response.data.reverse());
+        }).catch((error) => {
+            toast.error("Something went wrong!");
+        });
+    }
+
+    const [creatingExam, setCreatingExam] = useState(false);
+
     const createExam = () => {
+        setCreatingExam(true);
         const config = {
             method: "POST",
             url: `${serverURL}/exams`,
@@ -112,13 +136,16 @@ function Context({ children }: { children: React.ReactNode }) {
         };
 
         axios(config).then((response) => {
+            setCreatingExam(false);
             toast.success("Exam created successfully!");
             setNewExamName("");
             setNewExamDuration(0);
             setNewExamTotalMarks(0);
             setNewExamPrompt("");
             getExams();
+            window.location.href = "/exam/" + response.data._id;
         }).catch((error) => {
+            setCreatingExam(false);
             toast.error("Something went wrong!");
         });
     }
@@ -228,7 +255,9 @@ function Context({ children }: { children: React.ReactNode }) {
             evaluate,
             evaluating,
             valuations,
-            getValuations
+            getValuations,
+            creatingExam,
+            getExamsByCourseId
         }}>
             {children}
         </MainContext.Provider>

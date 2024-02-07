@@ -2,6 +2,7 @@
 import { MainContext } from "@/app/context/context";
 import { useParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
+import { FaTrophy } from "react-icons/fa";
 import { FiArrowLeft, FiFile, FiFileText, FiKey, FiPrinter, FiUser } from "react-icons/fi";
 
 export default function Home() {
@@ -88,8 +89,19 @@ export default function Home() {
 					</div>
 				</div>
 				<div className="print divider divider-horizontal"></div>
-				<div className="print w-full flex flex-col">
-				</div>
+				{valuations?.valuations ? <div className="print w-full flex flex-col overflow-y-auto">
+					{
+						valuations?.valuations[selectedStudent]?.data?.answers?.map((answer: any, index: number) => {
+							return <div key={index} className="flex flex-col p-5 border rounded-lg mb-4">
+								<p className="mb-2 font-semibold">{index + 1}. {answer?.question}</p>
+								<p className="mb-4"><div className="badge badge-outline">Answer</div>  {answer?.answer}</p>
+								<p className="mb-4 flex items-center"><FaTrophy className="mr-2"/> <div className="badge badge-outline mr-2">Score</div>  {answer?.score[0]} / {answer?.score[1]}</p>
+								<p className="mb-4"><div className="badge badge-outline">Remarks</div> {answer?.remarks}</p>
+								<p className="mb-4"><div className="badge badge-outline">Confidence level</div>  {answer?.confidence}</p>
+							</div>
+						})
+					}
+				</div> : ""}
 			</div>
 		</main>
 	);
