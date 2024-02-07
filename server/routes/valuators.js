@@ -1,69 +1,31 @@
 import express from "express";
 import joi from "joi";
-import Valuator from "../models/Valuator.js";
 import OpenAI from "openai";
-import aiPrompt from "../utils/utils.js";
+import { aiPrompt } from "../utils/utils.js";
 import Valuation from "../models/Valuation.js";
+import Exam from "../models/Exam.js";
 
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-    var valuators = await Valuator.find().lean();
+    var exams = await Exam.find().lean();
 
-    for(const valuator of valuators){
-        valuator.valuations = await Valuation.find({valuatorId: valuator._id}).countDocuments();
+    for (const exam of exams) {
+        exam.valuations = await Valuation.find({ examId: exam._id }).countDocuments();
     }
 
     res.send(valuators.reverse());
 });
 
-router.post("/", async (req, res) => {
-    const schema = joi.object({
-        title: joi.string().required(),
-        questionPaper: joi.string().required(),
-        answerKey: joi.string().required(),
-    });
-
-    try {
-        const data = await schema.validateAsync(req.body);
-        const newValuator = new Valuator({
-            title: data.title,
-            questionPaper: data.questionPaper,
-            answerKey: data.answerKey,
-        });
-
-        return res.send(await newValuator.save());
-    } catch (err) {
-        console.log(err)
-        return res.status(500).send(err);
-    }
-});
-
-router.post("/byId", async (req, res) => {
-    const schema = joi.object({
-        id: joi.string().required(),
-    });
-
-    try {
-        const data = await schema.validateAsync(req.body);
-        const valuator = await Valuator.findById(data.id);
-        return res.send(valuator);
-    }
-    catch (err) {
-        return res.status(500).send(err);
-    }
-});
-
-
 router.post("/valuate", async (req, res) => {
     const schema = joi.object({
-        valuatorId: joi.string().required(),
+        examId: joi.string().required(),
         answerSheet: joi.string().required(),
     });
 
     try {
         const data = await schema.validateAsync(req.body);
-        const valuator = await Valuator.findById(data.valuatorId);
+        const exam = await Exam.findById(data.examId);
 
         const openai = new OpenAI({
             apiKey: process.env.OPENAI_API_KEY,
@@ -81,25 +43,15 @@ router.post("/valuate", async (req, res) => {
                     role: "user",
                     content: [
                         { type: "text", text: "Question Paper:" },
-                        {
-                            type: "image_url",
-                            image_url: {
-                                "url": valuator.questionPaper,
-                            },
-                        },
+                        { type: "text", text: JSON.stringify(exam.questionPaper) },
                     ],
                 },
                 {
                     role: "user",
                     content: [
                         { type: "text", text: "Answer Keys:" },
-                        {
-                            type: "image_url",
-                            image_url: {
-                                "url": valuator.answerKey,
-                            },
-                        },
-                    ]
+                        { type: "text", text: JSON.stringify(exam.answerKey) },
+                    ],
                 },
                 {
                     role: "user",
@@ -122,7 +74,7 @@ router.post("/valuate", async (req, res) => {
         const respData = JSON.parse(resp.split("```json")[1].split("```")[0]);
 
         const newValuation = new Valuation({
-            valuatorId: data.valuatorId,
+            examId: data.examId,
             data: respData,
             answerSheet: data.answerSheet,
         });
@@ -139,16 +91,16 @@ router.post("/valuate", async (req, res) => {
 
 router.post("/valuations", async (req, res) => {
     const schema = joi.object({
-        valuatorId: joi.string().required(),
+        examId: joi.string().required(),
     });
 
     try {
         const data = await schema.validateAsync(req.body);
-        const valuations = await Valuation.find({ valuatorId: data.valuatorId }).lean();
+        const valuations = await Valuation.find({ examId: data.examId }).lean();
 
         for (const valuation of valuations) {
-            valuation.questionPaper = (await Valuator.findById(valuation.valuatorId)).questionPaper;
-            valuation.answerKey = (await Valuator.findById(valuation.valuatorId)).answerKey;
+            valuation.questionPaper = (await Exam.findById(valuation.valuatorId)).questionPaper;
+            valuation.answerKey = (await Exam.findById(valuation.valuatorId)).answerKey;
         }
 
         return res.send(valuations.reverse());
@@ -175,7 +127,7 @@ router.post("/total-marks", async (req, res) => {
         }
 
         return res.send({
-            examName: (await Valuator.findById(valuation.valuatorId)).title,
+            examName: (await Exam.findById(valuation.valuatorId)).name,
             totalScore: totalScore.toString(),
             maxScore: maxScore.toString(),
         });
@@ -187,13 +139,13 @@ router.post("/total-marks", async (req, res) => {
 
 router.post("/marksheet", async (req, res) => {
     const schema = joi.object({
-        valuatorId: joi.string().required(),
+        examId: joi.string().required(),
     });
 
     try {
         const data = await schema.validateAsync(req.body);
 
-        const valuations = await Valuation.find({ valuatorId: data.valuatorId }).lean();
+        const valuations = await Valuation.find({ examId: data.examId }).lean();
 
         var marksheet = [];
 
@@ -219,85 +171,6 @@ router.post("/marksheet", async (req, res) => {
         return res.send(marksheet);
     }
     catch (err) {
-        return res.status(500).send(err);
-    }   
-});
-
-router.post("/revaluate", async (req, res) => {
-    const schema = joi.object({
-        valuationId: joi.string().required(),
-        remarks: joi.string().required().allow(""),
-    });
-
-    try {
-        const data = await schema.validateAsync(req.body);
-        const valuation = await Valuation.findById(data.valuationId);
-
-        const valuator = await Valuator.findById(valuation.valuatorId);
-
-        const openai = new OpenAI({
-            apiKey: process.env.OPENAI_API_KEY,
-        });
-
-        const completion = await openai.chat.completions.create({
-            model: "gpt-4-vision-preview",
-            messages: [
-                {
-                    role: "system",
-                    content: aiPrompt + "\n\nEXTRA REMARKS (VERY IMPORTANT!!): " + data.remarks + (data.remarks ? "\nGive remarks as 'Revaluated' for all questions extra remarks applied to." : ""),
-                },
-                {
-                    role: "user",
-                    content: [
-                        { type: "text", text: "Question Paper:" },
-                        {
-                            type: "image_url",
-                            image_url: {
-                                "url": valuator.questionPaper,
-                            },
-                        },
-                    ],
-                },
-                {
-                    role: "user",
-                    content: [
-                        { type: "text", text: "Answer Keys:" },
-                        {
-                            type: "image_url",
-                            image_url: {
-                                "url": valuator.answerKey,
-                            },
-                        },
-                    ]
-                },
-                {
-                    role: "user",
-                    content: [
-                        { type: "text", text: "Answer Sheet:" },
-                        {
-                            type: "image_url",
-                            image_url: {
-                                "url": valuation.answerSheet,
-                            },
-                        },
-                    ]
-                }
-            ],
-            "max_tokens": 1000,
-        });
-
-        const resp = completion.choices[0].message.content;
-
-        const respData = JSON.parse(resp.split("```json")[1].split("```")[0]);
-
-        await Valuation.findByIdAndUpdate(data.valuationId, {
-            data: respData,
-        });
-
-        return res.send(respData);
-    }
-    catch (err) {
-        console.log(err);
         return res.status(500).send(err);
     }
 });

@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const ValuationSchema = new mongoose.Schema(
     {
-        valuatorId: {
+        examId: {
             type: String,
             required: true
         },

@@ -18,7 +18,7 @@ app.use("/exams", examRouter);
 app.use("/courses", courseRouter);
 
 app.get("/", (req, res) => {
-    res.send("Valuate.ai");
+    res.send("Examinator.AI");
 });
 
 async function connectDB() {

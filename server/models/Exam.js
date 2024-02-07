@@ -17,6 +17,14 @@ const ExamSchema = new mongoose.Schema(
         prompt: {
             type: String,
         },
+        questionPaper: {
+            type: Object,
+            required: true,
+        },
+        answerKey: {
+            type: Object,
+            required: true,
+        },
         courseId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Course",
