@@ -3,7 +3,7 @@ import { useParams } from "next/navigation";
 import { FiArrowLeft, FiFileText } from "react-icons/fi";
 
 export default function Home() {
-	const { valuationId } = useParams();
+	const { examId } = useParams();
 
 	return (
 		<main className="w-screen h-screen bg-base-100 flex flex-col p-5 overflow-auto box-border">

@@ -5,13 +5,16 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { FiArrowLeft, FiCheckCircle, FiClock, FiDownload, FiEdit, FiExternalLink, FiFileText, FiHash, FiKey, FiPrinter, FiSettings, FiStar, FiType } from "react-icons/fi";
+import { ToastContainer } from "react-toastify";
 
 export default function Home() {
 	const { examId } = useParams();
 
 	const [selectedTab, setSelectedTab] = useState(0);
 
-	const { getExam, examData } = useContext(MainContext);
+	const { getExam, examData, evaluate, evaluating } = useContext(MainContext);
+
+	const [answerSheet, setAnswerSheet] = useState<string>("");
 
 	useEffect(() => {
 		getExam(examId);
@@ -27,7 +30,7 @@ export default function Home() {
 							<a onClick={() => setSelectedTab(0)} role="tab" className={"tab " + (selectedTab === 0 ? "tab-active" : "")}><FiFileText className="mr-2" /> Question Paper</a>
 							<a onClick={() => setSelectedTab(1)} role="tab" className={"tab " + (selectedTab === 1 ? "tab-active" : "")}><FiKey className="mr-2" /> Answer Key</a>
 						</div>
-						<button className="btn btn-primary" onClick={()=>window.print()}><FiPrinter /> Download / Print</button>
+						<button className="btn btn-primary" onClick={() => window.print()}><FiPrinter /> Download / Print</button>
 					</div>
 					<div className="overflow-y-auto">
 						{
@@ -77,23 +80,29 @@ export default function Home() {
 				</div>
 				<div className="print divider divider-horizontal"></div>
 				<div className="print w-full flex flex-col">
-					<div className="flex justify-between"><Link href={"/review/123456"}><button className="btn btn-primary"><FiCheckCircle /> Review Answer Sheets</button></Link>
+					<div className="flex justify-between"><Link href={"/review/" + examId}><button className="btn btn-primary"><FiCheckCircle /> Review Answer Sheets</button></Link>
 						<button className="btn btn-primary"><FiFileText /> View Mark Sheet</button>
 					</div>
 					<div className="flex items-center text-xl font-semibold my-5"><FiFileText className="mr-2" /> Evaluate Answer Sheets</div>
-					<UploadDropzone
+					{answerSheet ? <img src={answerSheet} className="w-96 border rounded-lg" /> : <UploadDropzone
 						endpoint="media"
 						onClientUploadComplete={(res) => {
 							var files = [];
 							for (const file of res) {
 								files.push(file.url);
 							}
+
+							setAnswerSheet(files[0]);
 							// setNewEvaluatorQuestionPapers([...files]);
 						}}
 						onUploadError={(error: Error) => {
 							alert(`ERROR! ${error.message}`);
 						}}
-					/>
+					/>}
+					<button className={"mt-5 btn btn-primary " + (evaluating ? "btn-disabled" : "")} onClick={() => {
+						if (evaluating) return;
+						evaluate(examId, answerSheet);
+					}}>{evaluating ? <div className="flex items-center"><span className="mr-2 loading loading-spinner loading-sm"></span><p>Evaluating...</p></div> : "Evaluate"}</button>
 				</div>
 			</div>
 		</main>
