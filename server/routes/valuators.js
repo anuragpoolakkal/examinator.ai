@@ -4,6 +4,7 @@ import OpenAI from "openai";
 import { aiPrompt } from "../utils/utils.js";
 import Valuation from "../models/Valuation.js";
 import Exam from "../models/Exam.js";
+import Course from "../models/Course.js";
 
 const router = express.Router();
 
@@ -98,14 +99,16 @@ router.post("/valuations", async (req, res) => {
         const data = await schema.validateAsync(req.body);
         const valuations = await Valuation.find({ examId: data.examId }).lean();
 
-        for (const valuation of valuations) {
-            valuation.questionPaper = (await Exam.findById(valuation.valuatorId)).questionPaper;
-            valuation.answerKey = (await Exam.findById(valuation.valuatorId)).answerKey;
-        }
+        const exam = await Exam.findById(data.examId).lean();
+        exam.course = (await Course.findById(exam.courseId).select("name code").lean());
 
-        return res.send(valuations.reverse());
+        return res.send({
+            valuations,
+            exam: exam
+        });
     }
     catch (err) {
+        console.log(err);
         return res.status(500).send(err);
     }
 });
