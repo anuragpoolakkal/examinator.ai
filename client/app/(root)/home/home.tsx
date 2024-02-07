@@ -1,26 +1,39 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FiPlus, FiUser, FiFileText, FiEdit, FiTrash, FiType, FiHash } from "react-icons/fi";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { UploadDropzone } from "@/app/utils/uploadthing";
+import { MainContext } from "@/app/context/context";
 
 export default function Home({
     children,
 }: {
     children: React.ReactNode
 }) {
+    const { getCourses,
+        courses,
+        selectedCourse,
+        setSelectedCourse,
+        newCourseName,
+        setNewCourseName,
+        newCourseCode,
+        setNewCourseCode,
+        newCourseSyllabus,
+        setNewCourseSyllabus,
+        newCourseOutcomes,
+        setNewCourseOutcomes,
+        newCourseTextbook,
+        setNewCourseTextbook,
+        newCourseQuestionPapers,
+        setNewCourseQuestionPapers,
+        createCourse,
+    } = useContext(MainContext);
+
     const [showMenu, setShowMenu] = useState(false);
-    const [selectedCourse, setSelectedCourse] = useState(-1);
-    const [newCourseName, setNewCourseName] = useState("");
-    const [newCourseCode, setNewCourseCode] = useState("");
-    const [newCourseSyllabus, setNewCourseSyllabus] = useState("");
-    const [newCourseOutcomes, setNewCourseOutcomes] = useState("");
-    const [newCourseTextbook, setNewCourseTextbook] = useState("");
-    const [newCourseQuestionPapers, setNewCourseQuestionPapers] = useState("");
 
     useEffect(() => {
-
+        getCourses();
     }, []);
 
     return (
@@ -39,7 +52,7 @@ export default function Home({
                 </div>
                 <label className='btn btn-primary' htmlFor={"newcourse_modal"} onClick={() => { }}><FiPlus /> NEW COURSE</label>
                 <div className='p-0 my-2 h-full w-full overflow-hidden hover:overflow-y-auto'>
-                    {[...Array(10)]?.map((evaluator: any, i: number) => {
+                    {courses?.map((course: any, i: number) => {
                         return <div className={(selectedCourse === i ? ' bg-base-200 ' : ' bg-transparent hover:bg-base-200 ') + 'cursor-pointer flex flex-col px-3 py-2 rounded-md w-full mb-1'} onClick={() => {
                             setSelectedCourse(i); setShowMenu(false);
                         }}>
@@ -169,7 +182,7 @@ export default function Home({
                     }
                     <div className="modal-action">
                         <label htmlFor="newcourse_modal" className="btn">Cancel</label>
-                        <label htmlFor="newcourse_modal" className="btn btn-primary" onClick={() => { }}>Create Course</label>
+                        <label htmlFor="newcourse_modal" className="btn btn-primary" onClick={() => createCourse()}>Create Course</label>
                     </div>
                 </div>
                 <label className="modal-backdrop" htmlFor="newcourse_modal">Cancel</label>

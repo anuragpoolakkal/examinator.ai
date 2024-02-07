@@ -1,36 +1,48 @@
 "use client";
+import { MainContext } from "@/app/context/context";
 import Link from "next/link";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FiClock, FiEdit, FiExternalLink, FiFileText, FiHash, FiStar, FiType } from "react-icons/fi";
 
 export default function Home() {
-	const [newExamName, setNewExamName] = useState("");
-	const [newExamDuration, setNewExamDuration] = useState(0);
-	const [newExamTotalMarks, setNewExamTotalMarks] = useState(0);
-	const [newExamPrompt, setNewExamPrompt] = useState("");
+	const {
+		selectedCourse,
+		courses,
+		getExams,
+		exams,
+		newExamName,
+		setNewExamName,
+		newExamDuration,
+		setNewExamDuration,
+		newExamTotalMarks,
+		setNewExamTotalMarks,
+		newExamPrompt,
+		setNewExamPrompt,
+		createExam
+	} = useContext(MainContext);
 
 	return (
 		<main className="flex flex-col p-5 overflow-y-auto w-full">
-			<div className="flex items-center text-xl font-semibold"><FiFileText className="mr-2" /> Compiler Design (CODE)</div>
+			<div className="flex items-center text-xl font-semibold"><FiFileText className="mr-2" /> {courses[selectedCourse]?.name} ({courses[selectedCourse]?.code})</div>
 			<div className="flex flex-wrap mt-7">
 				<div className="flex flex-col mr-10">
 					<div className="flex items-center text-lg font-semibold mb-5"><FiFileText className="mr-2" /> Syllabus</div>
-					<img className="w-24 h-24 border rounded-xl" src={"https://utfs.io/f/b3c9aead-d0d9-4910-9ec6-63138d686cb2-1sa31.jpeg"} />
+					<img className="w-24 h-24 border rounded-xl" src={courses[selectedCourse]?.syllabus} />
 				</div>
 				<div className="divider lg:divider-horizontal"></div>
 				<div className="flex flex-col mr-10">
 					<div className="flex items-center text-lg font-semibold mb-5"><FiFileText className="mr-2" /> Course Outcomes</div>
-					<img className="w-24 h-24 border rounded-xl" src={"https://utfs.io/f/b3c9aead-d0d9-4910-9ec6-63138d686cb2-1sa31.jpeg"} />
+					<img className="w-24 h-24 border rounded-xl" src={courses[selectedCourse]?.courseOutcome} />
 				</div>
 				<div className="divider lg:divider-horizontal"></div>
 				<div className="flex flex-col mr-10">
 					<div className="flex items-center text-lg font-semibold mb-5"><FiFileText className="mr-2" /> Textbook</div>
-					<img className="w-24 h-24 border rounded-xl" src={"https://utfs.io/f/b3c9aead-d0d9-4910-9ec6-63138d686cb2-1sa31.jpeg"} />
+					<img className="w-24 h-24 border rounded-xl" src={courses[selectedCourse]?.textBook} />
 				</div>
 				<div className="divider lg:divider-horizontal"></div>
 				<div className="flex flex-col mr-10">
 					<div className="flex items-center text-lg font-semibold mb-5"><FiFileText className="mr-2" /> Previous Question papers</div>
-					<img className="w-24 h-24 border rounded-xl" src={"https://utfs.io/f/b3c9aead-d0d9-4910-9ec6-63138d686cb2-1sa31.jpeg"} />
+					<img className="w-24 h-24 border rounded-xl" src={courses[selectedCourse]?.prevYearQns} />
 				</div>
 			</div>
 			<div className="mt-10 flex items-center text-xl font-semibold"><FiFileText className="mr-2" /> Exams</div>
@@ -44,19 +56,21 @@ export default function Home() {
 						<th></th>
 						<th>Name</th>
 						<th>Total Marks</th>
+						<th>Questions</th>
 						<th>Duration</th>
 						<th>View</th>
 					</tr>
 				</thead>
 				<tbody>
 					{
-						[...Array(5)].map((exam: any, index: number) => (
+						exams?.map((exam: any, index: number) => (
 							<tr>
 								<th>{index + 1}</th>
-								<td>Series Test 1</td>
-								<td>100</td>
-								<td>1 hour</td>
-								<td><Link href={"/exam/1234567"}><button className="btn btn-primary btn-square"><FiExternalLink /></button></Link></td>
+								<td>{exam?.name}</td>
+								<td>{exam?.totalMarks}</td>
+								<td>{exam?.questionPaper?.length ?? "-"}</td>
+								<td>{exam?.duration} min</td>
+								<td><Link href={"/exam/" + exam?._id}><button className="btn btn-primary btn-square"><FiExternalLink /></button></Link></td>
 							</tr>
 						))
 					}
@@ -77,7 +91,7 @@ export default function Home() {
 					<textarea className="textarea textarea-bordered w-full" placeholder="Prompt" value={newExamPrompt} onChange={(x) => setNewExamPrompt(x.target.value)}></textarea>
 					<div className="modal-action">
 						<label htmlFor="newexam_modal" className="btn">Cancel</label>
-						<label htmlFor="newexam_modal" className="btn btn-primary" onClick={() => { }}>Create Exam</label>
+						<label htmlFor="newexam_modal" className="btn btn-primary" onClick={() => createExam()}>Create Exam</label>
 					</div>
 				</div>
 				<label className="modal-backdrop" htmlFor="newexam_modal">Cancel</label>

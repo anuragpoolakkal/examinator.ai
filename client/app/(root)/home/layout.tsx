@@ -2,11 +2,12 @@
 import React from 'react';
 import Home from './home';
 import { ToastContainer } from 'react-toastify';
+import { Context } from '@/app/context/context';
 
 export default function RootLayout({
     children,
 }: {
     children: React.ReactNode
 }) {
-    return (<><Home>{children}</Home><ToastContainer /></>)
+    return (<Context><Home>{children}</Home><ToastContainer /></Context>)
 }

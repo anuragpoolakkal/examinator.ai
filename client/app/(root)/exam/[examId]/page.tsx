@@ -1,8 +1,9 @@
 "use client";
+import { MainContext } from "@/app/context/context";
 import { UploadDropzone } from "@/app/utils/uploadthing";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FiArrowLeft, FiCheckCircle, FiClock, FiDownload, FiEdit, FiExternalLink, FiFileText, FiHash, FiKey, FiSettings, FiStar, FiType } from "react-icons/fi";
 
 export default function Home() {
@@ -10,9 +11,15 @@ export default function Home() {
 
 	const [selectedTab, setSelectedTab] = useState(0);
 
+	const { getExam, examData } = useContext(MainContext);
+
+	useEffect(() => {
+		getExam(examId);
+	}, [examId]);
+
 	return (
 		<main className="w-screen h-screen bg-base-100 flex flex-col p-5 overflow-auto box-border">
-			<div className="flex items-center text-xl font-semibold"><button className="btn btn-square mr-2" onClick={() => window.history.back()}><FiArrowLeft /></button><FiFileText className="mr-2" /> Compiler Design (CODE) | Exam Name</div>
+			<div className="flex items-center text-xl font-semibold"><button className="btn btn-square mr-2" onClick={() => window.history.back()}><FiArrowLeft /></button><FiFileText className="mr-2" /> {examData?.name} | {examData?.course?.name} ({examData?.course?.code})</div>
 			<div className="flex w-full h-full mt-5">
 				<div className="w-full flex flex-col">
 					<div className="flex justify-between items-center">
@@ -23,7 +30,49 @@ export default function Home() {
 						<button className="btn btn-primary"><FiDownload /> Download</button>
 					</div>
 					<div className="overflow-y-auto">
-						<img className="mt-5 w-full h-full" src={"https://utfs.io/f/b3c9aead-d0d9-4910-9ec6-63138d686cb2-1sa31.jpeg"} />
+						{
+							selectedTab === 0 ? <div className="flex flex-col">
+								<div className="flex flex-col items-center w-full mt-10">
+									<p className="text-2xl mb-2">{examData?.name}</p>
+									<p className="text-xl font-semibold">Course Code: {examData?.course?.code}</p>
+									<p className="text-xl font-semibold">Course Name: {examData?.course?.name}</p>
+									<div className="flex justify-between w-full mb-5">
+										<p className="text-lg">Max Marks: {examData?.totalMarks}</p>
+										<p className="text-lg">Duration: {examData?.duration} min</p>
+									</div>
+								</div>
+								{
+									examData?.questionPaper?.map((question: any, index: number) => {
+										return (
+											<div key={index} className="flex my-4">
+												<p className="text-lg">{index + 1}. {question?.question}</p>
+												<p className="text-lg mx-10">({question?.marks})</p>
+											</div>
+										);
+									})
+								}
+							</div> : <div className="flex flex-col">
+								<div className="flex flex-col items-center w-full mt-10">
+									<p className="text-2xl mb-2">{examData?.name}</p>
+									<p className="text-xl font-semibold">Course Code: {examData?.course?.code}</p>
+									<p className="text-xl font-semibold">Course Name: {examData?.course?.name}</p>
+									<p className="text-2xl font-semibold my-5">ANSWER KEYS</p>
+									<div className="flex justify-between w-full mb-5">
+										<p className="text-lg">Max Marks: {examData?.totalMarks}</p>
+										<p className="text-lg">Duration: {examData?.duration} min</p>
+									</div>
+								</div>
+								{
+									examData?.answerKey?.map((question: any, index: number) => {
+										return (
+											<div key={index} className="flex my-4">
+												<p className="text-lg">{index + 1}. {question?.answer}</p>
+											</div>
+										);
+									})
+								}
+							</div>
+						}
 					</div>
 				</div>
 				<div className="divider divider-horizontal"></div>
